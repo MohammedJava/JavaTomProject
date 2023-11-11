@@ -7,7 +7,6 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>Cart</title>
-    <!-- Include other scripts and styles if necessary -->
     <script>
         function removeProductFromCart(productSlug) {
             var xhr = new XMLHttpRequest();
@@ -41,9 +40,6 @@
         <% for (Product product : products) { %>
         <li>
             <%= product.getName()%> - <%= product.getDescription() %> - $<%= product.getPrice() %>
-            <% if (sessionRoleParams == null || !("staff".equals(sessionRoleParams))) { %>
-            <!-- Remove Button outside the order form -->
-            <% } %>
         </li>
         <% } %>
     </ul>

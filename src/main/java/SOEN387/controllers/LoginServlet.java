@@ -32,6 +32,7 @@ public class LoginServlet extends HttpServlet {
         // Forward the request to the login.jsp page
         RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
         dispatcher.forward(request, response);
+        System.out.println("CONNECTED");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 

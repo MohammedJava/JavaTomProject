@@ -11,27 +11,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO {
-    private Connection connection;
 
     public ProductDAO() {
-        connection = DatabaseConnection.getConnection();
     }
 
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
         String query = "SELECT name, description, vendor, urlSlug, sku, price, image FROM products";
 
-        try (PreparedStatement statement = connection.prepareStatement(query);
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Product product = new Product(
-                    resultSet.getString("name"),
-                    resultSet.getString("description"),
-                    resultSet.getString("vendor"),
-                    resultSet.getString("urlSlug"),
-                    resultSet.getString("sku"),
-                    resultSet.getDouble("price"),
-                    resultSet.getString("image")
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getString("vendor"),
+                        resultSet.getString("urlSlug"),
+                        resultSet.getString("sku"),
+                        resultSet.getDouble("price"),
+                        resultSet.getString("image")
                 );
                 products.add(product);
             }
@@ -39,13 +38,15 @@ public class ProductDAO {
             e.printStackTrace();
         }
 
+        System.out.println("ProductDAO: Fetched " + products.size() + " products.");
         return products;
     }
-    
+
     public int getProductIDByName(String productName) {
         String query = "SELECT id FROM products WHERE name = ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, productName);
 
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -65,18 +66,19 @@ public class ProductDAO {
         String query = "SELECT name, description, vendor, urlSlug, sku, price, image FROM products WHERE sku = ?";
         Product product = null;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, sku);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     product = new Product(
-                        resultSet.getString("name"),
-                        resultSet.getString("description"),
-                        resultSet.getString("vendor"),
-                        resultSet.getString("urlSlug"),
-                        resultSet.getString("sku"),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("image")
+                            resultSet.getString("name"),
+                            resultSet.getString("description"),
+                            resultSet.getString("vendor"),
+                            resultSet.getString("urlSlug"),
+                            resultSet.getString("sku"),
+                            resultSet.getDouble("price"),
+                            resultSet.getString("image")
                     );
                 }
             }
@@ -86,23 +88,24 @@ public class ProductDAO {
 
         return product;
     }
-    
+
     public Product getProductByUrlSlug(String urlSlug) {
         String query = "SELECT name, description, vendor, urlSlug, sku, price, image FROM products WHERE urlSlug = ?";
         Product product = null;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, urlSlug);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     product = new Product(
-                        resultSet.getString("name"),
-                        resultSet.getString("description"),
-                        resultSet.getString("vendor"),
-                        resultSet.getString("urlSlug"),
-                        resultSet.getString("sku"),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("image")
+                            resultSet.getString("name"),
+                            resultSet.getString("description"),
+                            resultSet.getString("vendor"),
+                            resultSet.getString("urlSlug"),
+                            resultSet.getString("sku"),
+                            resultSet.getDouble("price"),
+                            resultSet.getString("image")
                     );
                 }
             }
@@ -117,7 +120,8 @@ public class ProductDAO {
     public void createProduct(Product product) {
         String query = "INSERT INTO products (name, description, vendor, urlSlug, sku, price, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, product.getName());
             statement.setString(2, product.getDescription());
             statement.setString(3, product.getVendor());
@@ -136,7 +140,8 @@ public class ProductDAO {
     public void updateProduct(Product product) {
         String query = "UPDATE products SET name = ?, description = ?, vendor = ?, price = ?, image = ? WHERE sku = ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, product.getName());
             statement.setString(2, product.getDescription());
             statement.setString(3, product.getVendor());
@@ -154,7 +159,8 @@ public class ProductDAO {
     public void deleteProductBySku(String sku) {
         String query = "DELETE FROM products WHERE sku = ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, sku);
             statement.executeUpdate();
         } catch (SQLException e) {
