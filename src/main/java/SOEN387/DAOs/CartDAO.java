@@ -87,7 +87,7 @@ public class CartDAO {
     }
 
     public void clearCartItems(int userId) {
-        String sql = "DELETE FROM cart_items WHERE user_id = ?"; // Assuming you have a cart_items table
+        String sql = "DELETE FROM cart WHERE user_id = ?"; // Update table name to 'cart'
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             statement.executeUpdate();

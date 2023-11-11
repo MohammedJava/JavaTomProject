@@ -23,6 +23,7 @@ public class OrderService {
 
     public void createOrder(Order order, List<OrderItem> items) {
         order.setOrderItems(items); // Make sure the items are set
+        System.out.println("Creating order for user ID: " + order.getUserId());
         orderDAO.createOrder(order);
     }
     public void updateOrder(Order order) {
