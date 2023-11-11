@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="jsp/css/styles.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jsp/css/styles.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Some</title>
@@ -16,7 +16,7 @@
 <body>
 <div class="video-background">
     <video autoplay="autoplay" muted="muted" loop="loop" >
-        <source src="jsp/assets/videos/neon.mp4" type="video/mp4">
+        <source src="${pageContext.request.contextPath}/jsp/assets/videos/neon.mp4" type="video/mp4">
     </video>
 </div>
 
@@ -47,7 +47,7 @@
             <div class="contentBox">
                 <h3><%= product.getName() %></h3>
                 <h2 class="price"><%= product.getPrice() %> $</h2>
-                <a href="/JavaTomProject_war_exploded/products/<%=slug%>" class="buy">Buy Now</a>
+                <a href="${pageContext.request.contextPath}/productDetails/<%=slug%>" class="buy">Buy Now</a>
             </div>
         </div>
     <% } %>
