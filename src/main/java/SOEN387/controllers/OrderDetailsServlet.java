@@ -10,7 +10,7 @@ import SOEN387.services.OrderService;
 
 import java.io.IOException;
 
-@WebServlet("/order/*")
+@WebServlet("/customer/order/*")
 public class OrderDetailsServlet extends HttpServlet {
     private OrderService orderService;
 
@@ -22,16 +22,20 @@ public class OrderDetailsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
-        if (pathInfo != null) {
-            // Assumes path /{orderId}
-            int orderId = Integer.parseInt(pathInfo.substring(1));
-            Order order = orderService.getOrderById(orderId);
-            request.setAttribute("order", order);
-            request.getRequestDispatcher("/orderDetail.jsp").forward(request, response);
+        if (pathInfo != null && pathInfo.length() > 1) {
+            try {
+                int orderId = Integer.parseInt(pathInfo.substring(1));
+                Order order = orderService.getOrderById(orderId);
+                request.setAttribute("order", order);
+                request.getRequestDispatcher("/orderDetails.jsp").forward(request, response);
+            } catch (NumberFormatException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid order ID");
+            }
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Order ID not provided");
         }
     }
+
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)

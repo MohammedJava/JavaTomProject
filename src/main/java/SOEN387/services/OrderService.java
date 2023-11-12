@@ -38,4 +38,8 @@ public class OrderService {
         orderDAO.shipOrder(orderId, trackingNumber);
     }
 
+    public List<Order> getOrdersByUserId(int userId) {
+        return orderDAO.getOrdersByUserId(userId);
+    }
+
 }
