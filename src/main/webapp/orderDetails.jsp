@@ -33,6 +33,7 @@
     </p>
     <p>Status: <%= order.getStatus() %>
     </p>
+    <p>Shipping Address: <%= order.getShippingAddress() %></p>
 
     <h2>Order Items:</h2>
     <ul>

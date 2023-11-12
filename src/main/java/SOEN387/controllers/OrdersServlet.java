@@ -56,14 +56,16 @@ public class OrdersServlet extends HttpServlet {
             orderItems.add(new OrderItem(0, 0, product.getSku(), 1, product.getPrice()));
         }
 
-        Order order = new Order(0, getUserId(username), new Timestamp(System.currentTimeMillis()), totalPrice, "Pending");
+        String shippingAddress = request.getParameter("shippingAddress");
+
+        Order order = new Order(0, getUserId(username), new Timestamp(System.currentTimeMillis()),
+                totalPrice, "Pending", shippingAddress);
         if (cartProducts != null && !cartProducts.isEmpty()) {
             order.setOrderItems(orderItems);
 
-            // Use the updated OrderService method that also takes the list of order items
-            orderService.createOrder(order, orderItems); // Pass both the order and order items to be saved
+            orderService.createOrder(order, orderItems);
 
-            cartService.clearCart(username); // Clear cart after creating the order
+            cartService.clearCart(username);
             System.out.println("Cart cleared for user: " + username);
 
             request.setAttribute("order", order);
@@ -73,8 +75,7 @@ public class OrdersServlet extends HttpServlet {
 
             RequestDispatcher dispatcher = request.getRequestDispatcher("/orderConfirmation.jsp");
             dispatcher.forward(request, response);
-        }
-        else{
+        } else {
             System.out.println("OrdersServlet: Cart Error or Empty Cart for user: " + username);
         }
 

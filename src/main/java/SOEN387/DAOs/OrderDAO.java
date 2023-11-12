@@ -15,16 +15,21 @@ public class OrderDAO {
 
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
-        String query = "SELECT id, user_id, order_date, total_price, status FROM orders";
+        String query = "SELECT id, user_id, order_date, total_price, status, shipping_address FROM orders";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                Order order = new Order(resultSet.getInt("id"), resultSet.getInt("user_id"),
-                        resultSet.getTimestamp("order_date"), resultSet.getDouble("total_price"),
-                        resultSet.getString("status"));
+                Order order = new Order(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("user_id"),
+                        resultSet.getTimestamp("order_date"),
+                        resultSet.getDouble("total_price"),
+                        resultSet.getString("status"),
+                        resultSet.getString("shipping_address")
+                );
 
                 order.setOrderItems(getOrderItemsByOrderId(order.getId()));
                 orders.add(order);
@@ -57,8 +62,9 @@ public class OrderDAO {
     }
 
     public void createOrder(Order order) {
-        String insertOrderQuery = "INSERT INTO orders (user_id, total_price, status) VALUES (?, ?, ?)";
+        String insertOrderQuery = "INSERT INTO orders (user_id, total_price, status, shipping_address) VALUES (?, ?, ?, ?)";
         String insertItemQuery = "INSERT INTO order_items (order_id, product_sku, quantity, price) VALUES (?, ?, ?, ?)";
+
 
         Connection conn = null;
 
@@ -71,6 +77,7 @@ public class OrderDAO {
                 orderStmt.setInt(1, order.getUserId());
                 orderStmt.setDouble(2, order.getTotalPrice());
                 orderStmt.setString(3, order.getStatus());
+                orderStmt.setString(4, order.getShippingAddress());
                 int affectedRows = orderStmt.executeUpdate();
 
                 if (affectedRows == 0) {
@@ -125,13 +132,14 @@ public class OrderDAO {
 
 
     public void updateOrder(Order order) {
-        String query = "UPDATE orders SET user_id = ?, total_price = ?, status = ? WHERE id = ?";
+        String query = "UPDATE orders SET user_id = ?, total_price = ?, status = ?, shipping_address = ? WHERE id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, order.getUserId());
             statement.setDouble(2, order.getTotalPrice());
             statement.setString(3, order.getStatus());
-            statement.setInt(4, order.getId());
+            statement.setString(4, order.getShippingAddress());
+            statement.setInt(5, order.getId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -152,7 +160,7 @@ public class OrderDAO {
     }
 
     public Order getOrderById(int orderId) {
-        String query = "SELECT id, user_id, order_date, total_price, status FROM orders WHERE id = ?";
+        String query = "SELECT id, user_id, order_date, total_price, status, shipping_address FROM orders WHERE id = ?";
         Order order = null;
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -161,7 +169,7 @@ public class OrderDAO {
                 if (resultSet.next()) {
                     order = new Order(resultSet.getInt("id"), resultSet.getInt("user_id"),
                             resultSet.getTimestamp("order_date"), resultSet.getDouble("total_price"),
-                            resultSet.getString("status"));
+                            resultSet.getString("status"), resultSet.getString("shipping_address"));
 
                     order.setOrderItems(getOrderItemsByOrderId(order.getId()));
                 }
@@ -174,7 +182,7 @@ public class OrderDAO {
 
     public List<Order> getOrdersByUserId(int userId) {
         List<Order> orders = new ArrayList<>();
-        String query = "SELECT id, user_id, order_date, total_price, status FROM orders WHERE user_id = ?";
+        String query = "SELECT id, user_id, order_date, total_price, status, shipping_address FROM orders WHERE user_id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -187,7 +195,8 @@ public class OrderDAO {
                             userId,
                             resultSet.getTimestamp("order_date"),
                             resultSet.getDouble("total_price"),
-                            resultSet.getString("status")
+                            resultSet.getString("status"),
+                            resultSet.getString("shipping_address")
                     );
                     order.setOrderItems(getOrderItemsByOrderId(order.getId()));
                     orders.add(order);
@@ -215,7 +224,8 @@ public class OrderDAO {
                             resultSet.getInt("user_id"),
                             resultSet.getTimestamp("order_date"),
                             resultSet.getDouble("total_price"),
-                            resultSet.getString("status")
+                            resultSet.getString("status"),
+                            resultSet.getString("shipping_address")
                     );
                     order.setOrderItems(getOrderItemsByOrderId(order.getId()));
                 } else {

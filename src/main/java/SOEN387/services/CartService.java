@@ -78,5 +78,14 @@ public class CartService {
         }
     }
 
+    public void removeSingleItemFromCart(String user, String sku) {
+        int userId = userDAO.getUserIDByUsername(user);
+        Product product = productDAO.getProduct(sku);
+        int productId = productDAO.getProductIDByName(product.getName());
+
+        if (product != null && userId >= 0 && productId >= 0) {
+            cartDAO.removeSingleItemFromCart(userId, productId);
+        }
+    }
 
 }

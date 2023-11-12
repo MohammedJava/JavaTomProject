@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<jsp:include page="Navbar.jsp" />
+<jsp:include page="Navbar.jsp"/>
 
 <div class="video-background">
     <video autoplay="autoplay" muted="muted" loop="loop">
@@ -26,7 +26,9 @@
         for (Order order : orders) {
 %>
 <div class="order">
-    <p>Order ID: <%= order.getId() %>, Total Price: <%= order.getTotalPrice() %>, Status: <%= order.getStatus() %>
+    <p>Order ID: <%= order.getId() %>, Total Price: <%= order.getTotalPrice() %>, Status: <%= order.getStatus() %> ,
+        Shipping Address: <%= order.getShippingAddress() %>
+
     </p>
     <a href="order/<%= order.getId() %>">View Details</a>
 </div>

@@ -38,8 +38,7 @@ public class ProductFromCartServlet extends HttpServlet {
 		    if (name == null) {
 		        throw new IllegalArgumentException("No user name found");
 		    }
-		    // If both the session and name are available, continue with your business logic.
-		    // For example, display a welcome message or perform user-specific actions.
+
 		    response.getWriter().write("Welcome, " + name);
 		} catch (IllegalStateException e) {
 		    // Handle the case where no session is found
@@ -54,9 +53,7 @@ public class ProductFromCartServlet extends HttpServlet {
 		 String urlSlug = PathInfo.substring(1);
 		 String SKU = (productService.getProductByUrlSlug(urlSlug)).getSku();
 		 cartService.addProductToCart(name, SKU);
-		 
-		 // jsp work here
-		 
+
 		 RequestDispatcher dispatcher = request.getRequestDispatcher("/userCart.jsp");
 		 dispatcher.forward(request, response);
 		 
@@ -67,7 +64,7 @@ public class ProductFromCartServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		HttpSession session = request.getSession(); // Get the session without creating a new one
+		HttpSession session = request.getSession();
 		if(session == null) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No session found");
 			return;
@@ -86,12 +83,16 @@ public class ProductFromCartServlet extends HttpServlet {
 		String urlSlug = pathInfo.substring(1);
 		String SKU = productService.getProductByUrlSlug(urlSlug).getSku();
 
-		cartService.removeProductFromCart(name, SKU);
+
+
+		//old method
+		//cartService.removeProductFromCart(name, SKU);
+		cartService.removeSingleItemFromCart(name, urlSlug);
 
 		// Set response status to OK
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
-		     
+
 	   
 	 
 }

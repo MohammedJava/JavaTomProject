@@ -610,3 +610,90 @@ nav a:hover {
 .order-container .order a:hover {
 	background-color: #45a049;
 }
+
+.container {
+	width: 80%;
+	margin: auto;
+	overflow: hidden;
+}
+header {
+	background: #50b3a2;
+	color: white;
+	padding-top: 30px;
+	min-height: 70px;
+	border-bottom: #e8491d 3px solid;
+}
+header a {
+	color: #ffffff;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-size: 16px;
+}
+header ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	overflow: hidden;
+}
+header li {
+	float: left;
+	display: inline;
+	padding: 0 20px 0 20px;
+}
+header #branding {
+	float: left;
+}
+header #branding h1 {
+	margin: 0;
+}
+header nav {
+	float: right;
+	margin-top: 10px;
+}
+header .highlight, header .current a {
+	color: #e8491d;
+	font-weight: bold;
+}
+header a:hover {
+	color: #ffffff;
+	font-weight: bold;
+}
+.cart-items {
+	margin: 20px 0;
+	padding: 20px;
+	background: #fff;
+	border: 1px solid #ddd;
+	list-style: none;
+}
+.cart-items li {
+	padding: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ddd;
+}
+.cart-items li:last-child {
+	border-bottom: none;
+}
+.cart-items button {
+	background: #e8491d;
+	color: white;
+	border: 0;
+	padding: 5px 8px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.cart-items button:hover {
+	background: #333;
+}
+.submit-button {
+	display: block;
+	width: 100%;
+	padding: 10px;
+	background: #333;
+	color: white;
+	border: 0;
+	cursor: pointer;
+	border-radius: 5px;
+}
+.submit-button:hover {
+	background: #e8491d;
+}
