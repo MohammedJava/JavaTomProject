@@ -32,11 +32,12 @@ public class LoginServlet extends HttpServlet {
         // Forward the request to the login.jsp page
         RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
         dispatcher.forward(request, response);
+        System.out.println("CONNECTED");
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-    		              throws ServletException, IOException {
-    	
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         String name = request.getParameter("username");
         String passcode = request.getParameter("password");
         HttpSession session = request.getSession();
@@ -46,20 +47,24 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("/error");
             return;
         }
-        
+
         if ("secret".equals(passcode)) {
             session.setAttribute("role", "staff");
             response.sendRedirect("/JavaTomProject_war_exploded/products");
-        } 
+            return;
+        }
 
         // Check if the passcode (password) exists in the passcodes HashMap
         if (passcodes.containsKey(name) && passcodes.get(name).equals(passcode)) {
             session.setAttribute("name", name);
             response.sendRedirect("/JavaTomProject_war_exploded/products");
+            return;
         } else {
             response.sendRedirect("/login?error=true");
+            return;
         }
     }
+
 
     private void loadPasscodesFromFile() {
         try {

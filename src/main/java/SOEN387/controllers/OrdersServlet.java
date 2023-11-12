@@ -29,7 +29,7 @@ public class OrdersServlet extends HttpServlet {
     public OrdersServlet() {
         cartService = new CartService();
         orderService = new OrderService();
-        userService = new UserService(); // Instantiate UserService here
+        userService = new UserService();
     }
 
     @Override
@@ -42,7 +42,9 @@ public class OrdersServlet extends HttpServlet {
         }
 
         String username = (String) session.getAttribute("name");
+
         List<Product> cartProducts = cartService.getCart(username);
+        System.out.println("OrdersServlet: Retrieved cart for user: " + username + ", cart size: " + (cartProducts != null ? cartProducts.size() : "null"));
         if (cartProducts == null || cartProducts.isEmpty()) {
             response.sendRedirect("cart");
             return;
@@ -54,22 +56,29 @@ public class OrdersServlet extends HttpServlet {
             orderItems.add(new OrderItem(0, 0, product.getSku(), 1, product.getPrice()));
         }
 
-        Order order = new Order(0, getUserId(username), new Timestamp(System.currentTimeMillis()), totalPrice, "Pending");
-        order.setOrderItems(orderItems);
+        String shippingAddress = request.getParameter("shippingAddress");
 
-        // Use the updated OrderService method that also takes the list of order items
-        orderService.createOrder(order, orderItems); // Pass both the order and order items to be saved
+        Order order = new Order(0, getUserId(username), new Timestamp(System.currentTimeMillis()),
+                totalPrice, "Pending", shippingAddress);
+        if (cartProducts != null && !cartProducts.isEmpty()) {
+            order.setOrderItems(orderItems);
 
-        cartService.clearCart(username); // Uncomment this if you want to clear the cart
+            orderService.createOrder(order, orderItems);
 
-        request.setAttribute("order", order);
+            cartService.clearCart(username);
+            System.out.println("Cart cleared for user: " + username);
 
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-        response.setDateHeader("Expires", 0); // Proxies.
+            request.setAttribute("order", order);
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+            response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+            response.setDateHeader("Expires", 0); // Proxies.
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/orderConfirmation.jsp");
-        dispatcher.forward(request, response);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/orderConfirmation.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            System.out.println("OrdersServlet: Cart Error or Empty Cart for user: " + username);
+        }
+
     }
 
     private double calculateTotalPrice(List<Product> products) {

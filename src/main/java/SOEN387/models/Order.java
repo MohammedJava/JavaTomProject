@@ -9,14 +9,17 @@ public class Order {
     private Timestamp orderDate;
     private double totalPrice;
     private String status;
-    private List<OrderItem> orderItems; // Assuming you have an OrderItem class
+    private List<OrderItem> orderItems;
+    private String shippingAddress;
 
-    public Order(int id, int userId, Timestamp orderDate, double totalPrice, String status) {
+
+    public Order(int id, int userId, Timestamp orderDate, double totalPrice, String status, String shippingAddress) {
         this.id = id;
         this.userId = userId;
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
         this.status = status;
+        this.shippingAddress = shippingAddress;
     }
 
     // Getters and Setters
@@ -68,5 +71,12 @@ public class Order {
         this.orderItems = orderItems;
     }
 
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
     // toString()
 }
