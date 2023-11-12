@@ -14,7 +14,7 @@
     <a href="//localhost:8080/JavaTomProject_war_exploded/allOrders" class="link">All Orders</a>
     <% } %>
 
-    <% if (userName != null && !userName.isEmpty()) { %>
+    <% if (userName != null && !userName.isEmpty() || (userRole != null && userRole.equals("staff"))) { %>
     <a href="//localhost:8080/JavaTomProject_war_exploded/logout" class="link">Logout</a>
     <% } else { %>
     <a href="//localhost:8080/JavaTomProject_war_exploded/login" class="link">Login</a>

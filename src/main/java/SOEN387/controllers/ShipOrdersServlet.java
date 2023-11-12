@@ -1,18 +1,14 @@
 package SOEN387.controllers;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import SOEN387.models.Order;
-import SOEN387.services.OrderService;
-import SOEN387.services.UserService;
-
 import java.io.IOException;
-import java.util.List;
+
+import SOEN387.services.OrderService;
+
 @WebServlet("/shipOrder/*")
 public class ShipOrdersServlet extends HttpServlet {
     private OrderService orderService;
@@ -25,13 +21,20 @@ public class ShipOrdersServlet extends HttpServlet {
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
         if (pathInfo != null && pathInfo.length() > 1) {
-            int orderId = Integer.parseInt(pathInfo.substring(1));
-            // Implement the logic to set the tracking number and update the order status
-            String trackingNumber = "someTrackingNumber"; // This should come from somewhere else
-            orderService.shipOrder(orderId, trackingNumber);
-            response.sendRedirect("allOrders"); // Redirect to the all orders page
+            try {
+                int orderId = Integer.parseInt(pathInfo.substring(1));
+
+                String trackingNumber = "TRK" + orderId;
+
+                orderService.shipOrder(orderId, trackingNumber);
+
+                // Redirect to a confirmation page or back to the order list
+                response.sendRedirect(request.getContextPath() + "/allOrders");
+            } catch (NumberFormatException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid order ID format");
+            }
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid order ID");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Order ID not provided");
         }
     }
 }

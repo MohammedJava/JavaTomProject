@@ -5,7 +5,7 @@ body {
 }
 
 h1 {
-	color: White;
+	color: white;
 	margin-left: 56px;
 }
 
@@ -352,7 +352,7 @@ nav a:hover {
 
 .card .imgBox {
 	position: relative;
-	min-width: "100%";
+	min-width: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -506,53 +506,107 @@ nav a:hover {
 				minmax(280px, 1fr));
 		/* Reduced card width for mobile */
 	}
+}
 
+#button-container {
+	perspective: 1000px;
+	/* Needed for 3D animation effect */
+	color: white;
+}
 
+#glassmorphic-button {
+	padding: 10px 30px;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	background-color: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	border-radius: 50px;
+	box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3);
+	color: white;
+	font-size: 1rem;
+	cursor: pointer;
+	outline: none;
+	transform: translateZ(0);
+	/* Prepare for 3D animation */
+	transition: transform 0.3s, box-shadow 0.3s;
+}
 
-	.button-container {
-		perspective: 1000px;
-		/* Needed for 3D animation effect */
-		color: white;
+#glassmorphic-button:hover {
+	box-shadow: 0 8px 16px rgba(255, 255, 255, 0.3);
+	transform: scale(1.05) translateZ(50px);
+	/* 3D pop effect on hover */
+}
+
+/* Keyframes for the opening animation */
+@keyframes openAnimation {
+	0% {
+		transform: scale(0.5) translateZ(0);
+		opacity: 0;
 	}
 
-	.glassmorphic-button {
-		padding: 10px 30px;
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		background-color: rgba(255, 255, 255, 0.1);
-		backdrop-filter: blur(10px);
-		border-radius: 50px;
-		box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3);
-		color: white;
-		font-size: 1rem;
-		cursor: pointer;
-		outline: none;
-		transform: translateZ(0);
-		/* Prepare for 3D animation */
-		transition: transform 0.3s, box-shadow 0.3s;
+	100% {
+		transform: scale(1) translateZ(0);
+		opacity: 1;
 	}
+}
 
-	.glassmorphic-button:hover {
-		box-shadow: 0 8px 16px rgba(255, 255, 255, 0.3);
-		transform: scale(1.05) translateZ(50px);
-		/* 3D pop effect on hover */
-	}
+/* Apply the animation to the button when the page loads */
+#glassmorphic-button {
+	animation: openAnimation 0.5s ease-out forwards;
+}
 
-	/* Keyframes for the opening animation */
-	@keyframes openAnimation {
-		0% {
-			transform: scale(0.5) translateZ(0);
-			opacity: 0;
-		}
+.order-container{
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background: url('../assets/images/pexels-ketut-subiyanto-4247766.jpg');
+	background-size: cover;
+	color: white;
+}
 
-		100% {
-			transform: scale(1) translateZ(0);
-			opacity: 1;
-		}
-	}
 
-	/* Apply the animation to the button when the page loads */
-	.glassmorphic-button {
-		animation: openAnimation 0.5s ease-out forwards;
-	}
 
+
+.order {
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	margin: 20px auto;
+	max-width: 800px;
+	color: white;
+}
+
+.order-header {
+	font-weight: bold;
+	font-size: 1.2em;
+	color: white;
+}
+
+.order-details p,.order-container .order-items ul {
+	margin: 10px 0;
+	color: white;
+}
+
+ .order-items h3 {
+	margin-top: 15px;
+	margin-bottom: 10px;
+	 color: white;
+ }
+
+.order a {
+	display: inline-block;
+	background-color: #4CAF50; /* Change as needed */
+	color: white;
+	padding: 10px 20px;
+	margin-top: 10px;
+	border-radius: 5px;
+	text-decoration: none;
+	transition: background-color 0.3s;
+}
+
+.order-container .order a:hover {
+	background-color: #45a049;
 }
