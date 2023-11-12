@@ -68,6 +68,7 @@ public class LoginServlet extends HttpServlet {
 
     private void loadPasscodesFromFile() {
         try {
+            // TODO: Update the file path of user management
             File file = new File("C://Users//Mohammed//IdeaProjects//JavaTomProject//src//main//java//SOEN387//user_management.json"); // Specify the path to your JSON file
             if (file.exists()) {
                 passcodes = objectMapper.readValue(file, HashMap.class);

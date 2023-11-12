@@ -37,7 +37,7 @@ public class SignupServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Forward the request to the login.jsp page
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/signup.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("signup.jsp");
         dispatcher.forward(request, response);
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -74,6 +74,7 @@ public class SignupServlet extends HttpServlet {
 
     private void loadPasscodesFromFile() {
         try {
+            // TODO: Update the file path of user management
             File file = new File("C://Users//Mohammed//IdeaProjects//JavaTomProject//src//main//java//SOEN387//user_management.json"); // Specify the path to your JSON file
             if (file.exists()) {
                 passcodes = objectMapper.readValue(file, HashMap.class);
@@ -85,6 +86,7 @@ public class SignupServlet extends HttpServlet {
 
     private void savePasscodesToFile() {
         try {
+            // TODO: Update the file path of user management
             File file = new File("C://Users//Mohammed//IdeaProjects//JavaTomProject//src//main//java//SOEN387//user_management.json"); // Specify the path to your JSON file
             objectMapper.writeValue(file, passcodes);
         } catch (IOException e) {
