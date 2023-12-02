@@ -22,7 +22,7 @@ public class CartService {
 
     public List<Product> getCart(String user) {
 
-        int userId = userDAO.getUserIDByUsername(user);
+        int userId = userDAO.getUserIDByPasscode(user);
         if (userId == -1) {
             return null;
         }
@@ -36,7 +36,7 @@ public class CartService {
            user, create one first.
 		 * */
 
-        int userId = userDAO.getUserIDByUsername(user);
+        int userId = userDAO.getUserIDByPasscode(user);
         Product product = productDAO.getProduct(sku);
         int productId = productDAO.getProductIDByName(product.getName());
         if (product != null && userId >= 0 && productId >= 0) {
@@ -48,7 +48,7 @@ public class CartService {
 
     public void addProductToCart(String user, String sku) {
 
-        int userId = userDAO.getUserIDByUsername(user);
+        int userId = userDAO.getUserIDByPasscode(user);
         Product product = productDAO.getProduct(sku);
         int productId = productDAO.getProductIDByName(product.getName());
 
@@ -59,7 +59,7 @@ public class CartService {
 
     public void removeProductFromCart(String user, String sku) {
 
-        int userId = userDAO.getUserIDByUsername(user);
+        int userId = userDAO.getUserIDByPasscode(user);
         Product product = productDAO.getProduct(sku);
         int productId = productDAO.getProductIDByName(product.getName());
 
@@ -69,7 +69,7 @@ public class CartService {
     }
 
     public void clearCart(String username) {
-        int userId = userDAO.getUserIDByUsername(username);
+        int userId = userDAO.getUserIDByPasscode(username);
         if (userId >= 0) {
             System.out.println("Clearing cart for user ID: " + userId);
             cartDAO.clearCartItems(userId);
@@ -79,7 +79,7 @@ public class CartService {
     }
 
     public void removeSingleItemFromCart(String user, String sku) {
-        int userId = userDAO.getUserIDByUsername(user);
+        int userId = userDAO.getUserIDByPasscode(user);
         Product product = productDAO.getProduct(sku);
         int productId = productDAO.getProductIDByName(product.getName());
 

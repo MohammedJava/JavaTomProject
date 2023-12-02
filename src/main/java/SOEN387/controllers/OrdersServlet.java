@@ -90,7 +90,7 @@ public class OrdersServlet extends HttpServlet {
     }
 
     private int getUserId(String username) {
-        User user = userService.findByUsername(username);
+        User user = userService.findByPasscode(username);
         return user != null ? user.getId() : -1;
     }
 }

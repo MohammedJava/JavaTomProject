@@ -58,7 +58,7 @@ public class ProductDAO {
             e.printStackTrace();
         }
 
-        return -1; // Return a negative value (e.g., -1) to indicate that the user was not found.
+        return -1; 
     }
 
 

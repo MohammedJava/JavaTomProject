@@ -33,7 +33,7 @@ public class CustomerOrdersServlet extends HttpServlet {
         }
 
         String username = (String) session.getAttribute("name");
-        SOEN387.models.User user = userService.findByUsername(username);
+        SOEN387.models.User user = userService.findByPasscode(username);
         if (user == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
             return;

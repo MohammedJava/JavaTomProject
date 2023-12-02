@@ -1,7 +1,9 @@
 package SOEN387.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import java.io.IOException;
+
+import java.util.HashMap;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,75 +12,52 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
+import SOEN387.services.UserService;
+
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    private ObjectMapper objectMapper;
-    private HashMap<String, String> passcodes;
-
+   private HashMap<String, Boolean> passcodes;
+   private UserService userService;
+   
     public LoginServlet() {
-        objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        passcodes = new HashMap<>();
-        loadPasscodesFromFile();
+    	userService = new UserService();
+        passcodes = userService.getAllUsers();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Forward the request to the login.jsp page
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/login.jsp");
         dispatcher.forward(request, response);
-        System.out.println("CONNECTED");
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    		              throws ServletException, IOException {
+    	
+        String passcode = request.getParameter("passcode");
 
-        String name = request.getParameter("username");
-        String passcode = request.getParameter("password");
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(1800); // Set the session timeout to 30 minutes (1800 seconds)
 
-        if (passcode == null) {
+        if (passcode == null || passcode.equals("")) {
             response.sendRedirect("/error");
-            return;
         }
-
-        if ("secret".equals(passcode)) {
+        if (passcodes.containsKey(passcode) && passcodes.get(passcode)) {
+            session.setAttribute("passcode", passcode);
             session.setAttribute("role", "staff");
-            response.sendRedirect("/JavaTomProject_war_exploded/products");
-            return;
-        }
+            response.sendRedirect("/JavaECOM/products");  
+        } 
 
-        // Check if the passcode (password) exists in the passcodes HashMap
-        if (passcodes.containsKey(name) && passcodes.get(name).equals(passcode)) {
-            session.setAttribute("name", name);
-            response.sendRedirect("/JavaTomProject_war_exploded/products");
-            return;
+        else if (passcodes.containsKey(passcode) && !(passcodes.get(passcode))) {
+            session.setAttribute("name", passcode);
+            response.sendRedirect("/JavaECOM/products");
         } else {
             response.sendRedirect("/login?error=true");
-            return;
         }
     }
 
-
-    private void loadPasscodesFromFile() {
-        try {
-            // TODO: Update the file path of user management
-            File file = new File("C://Users//Mohammed//IdeaProjects//JavaTomProject//src//main//java//SOEN387//user_management.json"); // Specify the path to your JSON file
-            if (file.exists()) {
-                passcodes = objectMapper.readValue(file, HashMap.class);
-            } else {
-                passcodes = new HashMap<>();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
 

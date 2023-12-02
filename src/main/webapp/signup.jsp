@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>JavaTom Project</title>
+<title>JavaECOM</title>
 <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" href="jsp/css/styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
 </head>
 <body>
 <nav class="Navbar">
-    	<a href="/JavaTomProject_war_exploded" class="link">Home</a>
+    	<a href="/JavaECOM" class="link">Home</a>
     	<a href="products" class="link">Products</a>
     	<a href="login" class="link">Login</a>
     	<a href="signup" class="link">Sign Up</a>
@@ -36,11 +36,11 @@
 <div class ="wrapper">
 <form action="signup" method="post">
 
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username" required>
+   <label for="passcode">Passcode</label>
+    <input type="text" id="passcode" name="passcode" required>
     <br>
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password">
+    <label for="admin">admin</label>
+    <input type="password" id="admin" name="admin">
     <br>
     <input type="submit" value="SIGNUP">
 </form>

@@ -18,8 +18,7 @@
     	<a href="/JavaECOM" class="link">Home</a>
     	<a href="products" class="link">Products</a>
     	<a href="login" class="link">Login</a>
-    	<a href="signup" class="link">Sign Up</a>
-    	
+    	<a href="signup" class="link">Signup</a>	
 </nav>
 
 
@@ -34,15 +33,11 @@
 <div class="content">
 
 <div class ="wrapper">
-<form action="signup" method="post">
+<form  method="post">
 
-   <label for="passcode">Passcode</label>
-    <input type="text" id="passcode" name="passcode" required>
-    <br>
-    <label for="admin">admin</label>
-    <input type="password" id="admin" name="admin">
-    <br>
-    <input type="submit" value="SIGNUP">
+    <label for="Passcode">change Passcode</label>
+    <input type="text" id="Passcode" name="Passcode" required>
+    <input type="submit" value="Submit">
 </form>
 </div>
 
