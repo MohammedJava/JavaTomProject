@@ -29,7 +29,7 @@ public class SignupServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Forward the request to the login.jsp page
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/signup.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("signup.jsp");
         dispatcher.forward(request, response);
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,7 +52,7 @@ public class SignupServlet extends HttpServlet {
             } else {
             session.setAttribute("name", passcode);
             session.setAttribute("role", "staff");
-            response.sendRedirect("/JavaECOM/products");
+            response.sendRedirect("/JavaTomProject_war_exploded/products");
             }
         } else {
             boolean exists = userService.createUser(passcode, false);
@@ -62,7 +62,7 @@ public class SignupServlet extends HttpServlet {
             } else {
             
                 session.setAttribute("name", passcode);
-                response.sendRedirect("/JavaECOM/products");
+                response.sendRedirect("/JavaTomProject_war_exploded/products");
             }
         }
     }

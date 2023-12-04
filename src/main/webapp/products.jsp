@@ -55,9 +55,25 @@
     </div>
 
 
-<% if(("staff".equals(sessionRoleParams))) {%>
-    <a href="http://localhost:8080/JavaTomProject_war_exploded/products/download" class="join-btn" download>Download Products</a>
-<% } %>
+        <% if("staff".equals(sessionRoleParams)) { %>
+        <!-- Button to Show Create Product Form -->
+        <button onclick="document.getElementById('createProductForm').style.display='block'">Add New Product</button>
+
+        <!-- Create Product Form -->
+        <div id="createProductForm" style="display:none;">
+            <form action="${pageContext.request.contextPath}/createProduct" method="post">
+                <input type="text" name="name" placeholder="Product Name" required><br>
+                <input type="text" name="description" placeholder="Description"><br>
+                <input type="text" name="vendor" placeholder="Vendor"><br>
+                <input type="text" name="urlSlug" placeholder="URL Slug" required><br>
+                <input type="text" name="sku" placeholder="SKU" required><br>
+                <input type="number" name="price" placeholder="Price" step="0.01" required><br>
+                <input type="text" name="image" placeholder="Image URL"><br>
+                <input type="submit" value="Create Product">
+            </form>
+        </div>
+        <a href="http://localhost:8080/JavaTomProject_war_exploded/products/download" class="join-btn" download>Download Products</a>
+        <% } %>
 
     </ul>
 </body>

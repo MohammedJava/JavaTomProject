@@ -3,6 +3,7 @@ package SOEN387.services;
 import SOEN387.DAOs.CartDAO;
 import SOEN387.DAOs.ProductDAO;
 import SOEN387.DAOs.UserDAO;
+import SOEN387.models.CartItem;
 import SOEN387.models.Product;
 
 import java.util.List;
@@ -20,8 +21,7 @@ public class CartService {
     }
 
 
-    public List<Product> getCart(String user) {
-
+    public List<CartItem> getCart(String user) {
         int userId = userDAO.getUserIDByPasscode(user);
         if (userId == -1) {
             return null;
@@ -86,6 +86,26 @@ public class CartService {
         if (product != null && userId >= 0 && productId >= 0) {
             cartDAO.removeSingleItemFromCart(userId, productId);
         }
+    }
+
+    public int getProductQuantityInCart(String user, String sku) {
+        int userId = userDAO.getUserIDByPasscode(user);
+        if (userId == -1) {
+            return 0;
+        }
+
+        List<CartItem> cartItems = cartDAO.getCartItems(userId);
+        if (cartItems == null) {
+            return 0;
+        }
+
+        for (CartItem item : cartItems) {
+            if (item.getProduct().getSku().equals(sku)) {
+                return item.getQuantity();
+            }
+        }
+
+        return 0;
     }
 
 }

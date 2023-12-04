@@ -2,6 +2,8 @@
          pageEncoding="ISO-8859-1" %>
 <%@ page import="java.util.List" %>
 <%@ page import="SOEN387.models.Product" %>
+<%@ page import="SOEN387.services.CartService" %>
+<%@ page import="SOEN387.models.CartItem" %>
 
 <!DOCTYPE html>
 <html>
@@ -16,23 +18,44 @@
             integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
             crossorigin="anonymous"></script>
     <script>
-        function addToCart(productSlug) {
+        function addToCart(productSlug, sku) {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/JavaTomProject_war_exploded/cart/products/" + productSlug, true);
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    var status = xhr.status;
-                    if (status === 0 || (status >= 200 && status < 400)) {
-                        console.log("Product added to cart");
-                        alert('Product added to cart');
-                    } else {
-                        console.error("Failed to add product");
-                    }
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    // Update display to show quantity controls
+                    document.getElementById('cart-controls-' + sku).innerHTML = `
+                        <button type="button" onclick="decreaseQuantity('${sku}')">-</button>
+                        <span id="quantity-${sku}">1</span>
+                        <button type="button" onclick="increaseQuantity('${sku}')">+</button>
+                    `;
                 }
             };
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.send();
         }
+
+
+        function updateQuantity(sku, increase) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/JavaTomProject_war_exploded/modifyCartQuantity", true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    var updatedQuantity = xhr.responseText;
+                    document.getElementById('quantity-' + sku).innerText = updatedQuantity;
+                }
+            };
+            xhr.send("sku=" + sku + "&action=" + (increase ? "increase" : "decrease"));
+        }
+
+        function increaseQuantity(sku) {
+            updateQuantity(sku, true);
+        }
+
+        function decreaseQuantity(sku) {
+            updateQuantity(sku, false);
+        }
+
     </script>
 </head>
 
@@ -53,7 +76,20 @@ String sessionRoleParams = (String) session.getAttribute("role");
 
 <%
     Product product = (Product) request.getAttribute("product");
-    String sessionCustomerParams = (String) session.getAttribute("name");
+    String username = (String) session.getAttribute("name");
+    CartService cartService = new CartService();
+    List<CartItem> cartItems = cartService.getCart(username);
+    boolean isInCart = false;
+    int quantityInCart = 0;
+    if (cartItems != null) {
+        for (CartItem item : cartItems) {
+            if (item.getProduct().getSku().equals(product.getSku())) {
+                isInCart = true;
+                quantityInCart = item.getQuantity();
+                break;
+            }
+        }
+    }
 %>
 
 <%if (product != null) { %>
@@ -68,15 +104,23 @@ String sessionRoleParams = (String) session.getAttribute("role");
         </p>
         <h3><%= product.getPrice() %> $</h3>
 
-        <% if (!("staff".equals(sessionRoleParams))) {%>
-        <button type="button" onclick="addToCart('<%=product.getUrlSlug()%>')">Add To Your Cart</button>
-        <% } %>
+        <% if (!("staff".equals(sessionRoleParams))) {
+            if (isInCart && quantityInCart > 0) { %>
+        <div id="cart-controls-<%= product.getSku() %>" style="display: flex; align-items: center;">
+            <button type="button" onclick="decreaseQuantity('<%= product.getSku() %>')">-</button>
+            <span id="quantity-<%= product.getSku() %>"><%= quantityInCart %></span>
+            <button type="button" onclick="increaseQuantity('<%= product.getSku() %>')">+</button>
+        </div>
+        <% } else { %>
+        <button type="button" onclick="addToCart('<%= product.getUrlSlug() %>', '<%= product.getSku() %>')">Add To Your Cart</button>
+        <% }
+        } %>
     </div>
 
 
     <% if (("staff".equals(sessionRoleParams))) {%>
     <form id="updateProductForm"
-          action="http://localhost:8080/JavaTomProject_war_exploded/products/<%=product.getUrlSlug()%>" method="post">
+          action="http://localhost:8080/JavaTomProject_war_exploded/productDetails/<%=product.getUrlSlug()%>" method="post">
         <input type="text" name="name" placeholder="Product Name">
         <br>
         <input type="text" name="description" placeholder="Product Description">

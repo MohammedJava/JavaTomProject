@@ -1,6 +1,7 @@
 package SOEN387.DAOs;
 
 import SOEN387.configs.DatabaseConnection;
+import SOEN387.models.CartItem;
 import SOEN387.models.Product;
 
 import java.sql.Connection;
@@ -52,9 +53,9 @@ public class CartDAO {
     }
 
 
-    public List<Product> getCartItems(int userId) {
-        List<Product> cartItems = new ArrayList<>();
-        String query = "SELECT p.* FROM products p " +
+    public List<CartItem> getCartItems(int userId) {
+        List<CartItem> cartItems = new ArrayList<>();
+        String query = "SELECT p.*, c.quantity FROM products p " +
                 "INNER JOIN cart c ON p.id = c.product_id " +
                 "WHERE c.user_id = ?";
 
@@ -72,7 +73,9 @@ public class CartDAO {
                             resultSet.getDouble("price"),
                             resultSet.getString("image")
                     );
-                    cartItems.add(product);
+                    int quantity = resultSet.getInt("quantity");
+                    CartItem cartItem = new CartItem(product, quantity);
+                    cartItems.add(cartItem);
                 }
             }
         } catch (SQLException e) {
@@ -81,7 +84,6 @@ public class CartDAO {
 
         return cartItems;
     }
-
 
     public void UpdateQuantity(int userId, int productId, int Quantity) {
         String query = "UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?";

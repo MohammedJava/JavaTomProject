@@ -30,7 +30,7 @@ public class SetPasscodeServlet extends HttpServlet {
    
    protected void doGet(HttpServletRequest request, HttpServletResponse response)
            throws ServletException, IOException, JsonProcessingException {
-	   RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/changePasscode.jsp");
+	   RequestDispatcher dispatcher = request.getRequestDispatcher("changePasscode.jsp");
        dispatcher.forward(request, response);
    }
    
@@ -60,7 +60,7 @@ public class SetPasscodeServlet extends HttpServlet {
        if (condition) {
     	   
        }
-       RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/changePasscode.jsp");
+       RequestDispatcher dispatcher = request.getRequestDispatcher("changePasscode.jsp");
        dispatcher.forward(request, response);
 
    }

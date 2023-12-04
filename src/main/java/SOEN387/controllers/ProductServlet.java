@@ -95,8 +95,8 @@ public class ProductServlet extends HttpServlet {
 
         productService.updateProduct(SKU, productName, description, price, vendor, image);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/Product.jsp");
-        dispatcher.forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/productDetails/" + urlSlug);
+
 
 
     }

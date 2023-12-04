@@ -1,5 +1,6 @@
 package SOEN387.controllers;
 
+import SOEN387.models.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,10 +8,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import SOEN387.models.Order;
-import SOEN387.models.OrderItem;
-import SOEN387.models.Product;
-import SOEN387.models.User;
 import SOEN387.services.CartService;
 import SOEN387.services.OrderService;
 import SOEN387.services.UserService;
@@ -43,7 +40,9 @@ public class OrdersServlet extends HttpServlet {
 
         String username = (String) session.getAttribute("name");
 
-        List<Product> cartProducts = cartService.getCart(username);
+
+
+        List<CartItem> cartProducts = cartService.getCart(username);
         System.out.println("OrdersServlet: Retrieved cart for user: " + username + ", cart size: " + (cartProducts != null ? cartProducts.size() : "null"));
         if (cartProducts == null || cartProducts.isEmpty()) {
             response.sendRedirect("cart");
@@ -52,9 +51,10 @@ public class OrdersServlet extends HttpServlet {
 
         double totalPrice = calculateTotalPrice(cartProducts);
         List<OrderItem> orderItems = new ArrayList<>();
-        for (Product product : cartProducts) {
-            orderItems.add(new OrderItem(0, 0, product.getSku(), 1, product.getPrice()));
+        for (CartItem item : cartProducts) {
+            orderItems.add(new OrderItem(0, 0, item.getProduct().getSku(), item.getQuantity(), item.getProduct().getPrice()));
         }
+
 
         String shippingAddress = request.getParameter("shippingAddress");
 
@@ -81,10 +81,10 @@ public class OrdersServlet extends HttpServlet {
 
     }
 
-    private double calculateTotalPrice(List<Product> products) {
+    private double calculateTotalPrice(List<CartItem> cartItem) {
         double totalPrice = 0;
-        for (Product product : products) {
-            totalPrice += product.getPrice();
+        for (CartItem item : cartItem) {
+            totalPrice += item.getProduct().getPrice();
         }
         return totalPrice;
     }

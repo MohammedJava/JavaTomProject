@@ -15,7 +15,7 @@
 </head>
 <body>
 <nav class="Navbar">
-    	<a href="/JavaECOM" class="link">Home</a>
+    	<a href="/JavaTomProject_war_exploded" class="link">Home</a>
     	<a href="products" class="link">Products</a>
     	<a href="login" class="link">Login</a>
     	<a href="signup" class="link">Sign Up</a>
@@ -34,7 +34,7 @@
 <div class="content">
 
 <div class ="wrapper">
-<form action="signup" method="post">
+<form method="post">
 
    <label for="passcode">Passcode</label>
     <input type="text" id="passcode" name="passcode" required>
@@ -42,7 +42,7 @@
     <label for="admin">admin</label>
     <input type="password" id="admin" name="admin">
     <br>
-    <input type="submit" value="SIGNUP">
+    <input type="submit" value="LOGIN">
 </form>
 </div>
 

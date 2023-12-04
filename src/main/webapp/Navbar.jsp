@@ -18,5 +18,6 @@
     <a href="//localhost:8080/JavaTomProject_war_exploded/logout" class="link">Logout</a>
     <% } else { %>
     <a href="//localhost:8080/JavaTomProject_war_exploded/login" class="link">Login</a>
+    <a href="signup" class="link">Sign Up</a>
     <% } %>
 </nav>

@@ -1,9 +1,8 @@
-package SOEN387.services;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import SOEN387.services.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import SOEN387.DAOs.UserDAO;
 import SOEN387.models.User;
+import org.junit.jupiter.api.Test;
 
 public class SetPasscodeServiceTest {
 

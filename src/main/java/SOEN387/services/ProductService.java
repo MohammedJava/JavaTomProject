@@ -61,5 +61,7 @@ public class ProductService {
     public void deleteProduct(String urlSlug) {
         productDAO.deleteProductBySku(urlSlug);
     }
-
+    public void createProduct(Product product) {
+        productDAO.createProduct(product);
+    }
 }

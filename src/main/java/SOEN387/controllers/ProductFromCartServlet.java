@@ -86,8 +86,8 @@ public class ProductFromCartServlet extends HttpServlet {
 
 
 		//old method
-		//cartService.removeProductFromCart(name, SKU);
-		cartService.removeSingleItemFromCart(name, urlSlug);
+		cartService.removeProductFromCart(name, SKU);
+		//cartService.removeSingleItemFromCart(name, urlSlug);
 
 		// Set response status to OK
 		response.setStatus(HttpServletResponse.SC_OK);

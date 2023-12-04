@@ -1,5 +1,6 @@
 package SOEN387.controllers;
 
+import SOEN387.models.CartItem;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -46,8 +47,8 @@ public class ProductsCartServlet extends HttpServlet {
 		    response.getWriter().write("Error: " + e.getMessage());
 		} 
 		 
-		 List<Product> userProducts = cartService.getCart(name);
-		 request.setAttribute("products", userProducts);
+		 List<CartItem> userProducts = cartService.getCart(name);
+		 request.setAttribute("cartItems", userProducts);
 		 request.setAttribute("name", name);
 
 		 RequestDispatcher dispatcher = request.getRequestDispatcher("/userCart.jsp");

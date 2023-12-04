@@ -51,7 +51,7 @@ public class StaffPrivilegeServlet extends HttpServlet {
 		customers = userService.getAllUsersExceptSelf(passcode);
         
 		request.setAttribute("customers", customers);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/grantStaff.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("grantStaff.jsp");
         dispatcher.forward(request, response);	
         
 	}
@@ -98,7 +98,7 @@ public class StaffPrivilegeServlet extends HttpServlet {
 			
 		}
 		request.setAttribute("customers", customers);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/grantStaff.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("grantStaff.jsp");
         dispatcher.forward(request, response);	
 		
 	}

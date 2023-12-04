@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Forward the request to the login.jsp page
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/login.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -47,12 +47,12 @@ public class LoginServlet extends HttpServlet {
         if (passcodes.containsKey(passcode) && passcodes.get(passcode)) {
             session.setAttribute("passcode", passcode);
             session.setAttribute("role", "staff");
-            response.sendRedirect("/JavaECOM/products");  
+            response.sendRedirect("/JavaTomProject_war_exploded/products");
         } 
 
         else if (passcodes.containsKey(passcode) && !(passcodes.get(passcode))) {
             session.setAttribute("name", passcode);
-            response.sendRedirect("/JavaECOM/products");
+            response.sendRedirect("/JavaTomProject_war_exploded/products");
         } else {
             response.sendRedirect("/login?error=true");
         }

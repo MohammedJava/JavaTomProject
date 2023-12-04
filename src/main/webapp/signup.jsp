@@ -15,7 +15,7 @@
 </head>
 <body>
 <nav class="Navbar">
-    	<a href="/JavaECOM" class="link">Home</a>
+    	<a href="/JavaTomProject_war_exploded" class="link">Home</a>
     	<a href="products" class="link">Products</a>
     	<a href="login" class="link">Login</a>
     	<a href="signup" class="link">Sign Up</a>

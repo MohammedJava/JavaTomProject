@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ page import="java.util.List" %>
-<%@ page import="SOEN387.models.Product" %>
+<%@ page import="SOEN387.models.CartItem" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +8,7 @@
     <title>Cart</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jsp/css/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <script>
         function removeProductFromCart(productSlug) {
             var xhr = new XMLHttpRequest();
@@ -43,6 +44,7 @@
             xhr.send("sku=" + sku + "&quantity=" + quantity);
         }
     </script>
+
 </head>
 <body>
 
@@ -55,7 +57,7 @@
 </div>
 
 <%
-    List<Product> products = (List<Product>) request.getAttribute("products");
+    List<CartItem> cartItems = (List<CartItem>) request.getAttribute("cartItems");
     String sessionRoleParams = (String) session.getAttribute("role");
 %>
 
@@ -64,15 +66,24 @@
 
     <form action="orders" method="post">
         <ul>
-            <% for (Product product : products) { %>
+            <% if (cartItems != null && !cartItems.isEmpty()) { %>
+            <% for (CartItem cartItem : cartItems) { %>
             <li>
-                <%= product.getName()%> - <%= product.getDescription() %> - $<%= product.getPrice() %>
-                <% if (sessionRoleParams == null || !("staff".equals(sessionRoleParams))) { %>
-                <input type="number" id="quantity-<%=product.getSku()%>" name="quantity" min="1" value="1">
-                <button type="button" onclick="updateCartQuantity('<%=product.getSku()%>')">Update Quantity</button>
-                <button type="button" onclick="removeProductFromCart('<%=product.getUrlSlug()%>')">Remove</button>
-                <% } %>
+                <%= cartItem.getProduct().getName()%> - <%= cartItem.getProduct().getDescription() %> -
+                $<%= cartItem.getProduct().getPrice() %>
+                Quantity: <%= cartItem.getQuantity() %>
+                <input type="number" id="quantity-<%=cartItem.getProduct().getSku()%>" name="quantity" min="1"
+                       value="<%= cartItem.getQuantity() %>">
+                <button type="button" onclick="updateCartQuantity('<%=cartItem.getProduct().getSku()%>')">Update
+                    Quantity
+                </button>
+                <button type="button" onclick="removeProductFromCart('<%=cartItem.getProduct().getUrlSlug()%>')">
+                    Remove
+                </button>
             </li>
+            <% } %>
+            <% } else { %>
+            <p>Your cart is empty.</p>
             <% } %>
         </ul>
 
@@ -80,9 +91,6 @@
         <input type="text" id="shippingAddress" name="shippingAddress" required>
         <input type="submit" value="Order"/>
     </form>
-    <% if (products == null || products.isEmpty()) { %>
-    <p>Your cart is empty.</p>
-    <% } %>
 </div>
 </body>
 </html>
