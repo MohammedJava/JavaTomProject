@@ -64,6 +64,7 @@ public class OrderDAO {
     public int createOrder(Order order) {
         String insertOrderQuery = "INSERT INTO orders (user_id, total_price, status, shipping_address) VALUES (?, ?, ?, ?)";
         String insertItemQuery = "INSERT INTO order_items (order_id, product_sku, quantity, price) VALUES (?, ?, ?, ?)";
+        String getLastInsertIdQuery = "SELECT last_insert_rowid()";
 
         Connection conn = null;
         int orderId = -1; // Default order ID
@@ -72,17 +73,19 @@ public class OrderDAO {
             conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false); // Start transaction
 
-            // Insert the order and get generated order ID
-            try (PreparedStatement orderStmt = conn.prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS)) {
+            // Insert the order
+            try (PreparedStatement orderStmt = conn.prepareStatement(insertOrderQuery)) {
                 orderStmt.setInt(1, order.getUserId());
                 orderStmt.setDouble(2, order.getTotalPrice());
                 orderStmt.setString(3, order.getStatus());
                 orderStmt.setString(4, order.getShippingAddress());
                 orderStmt.executeUpdate();
 
-                try (ResultSet generatedKeys = orderStmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        orderId = generatedKeys.getInt(1); // Retrieve the generated order ID
+                // Get the generated order ID
+                try (Statement stmt = conn.createStatement();
+                     ResultSet rs = stmt.executeQuery(getLastInsertIdQuery)) {
+                    if (rs.next()) {
+                        orderId = rs.getInt(1); // Retrieve the last inserted row ID
                     }
                 }
             }
