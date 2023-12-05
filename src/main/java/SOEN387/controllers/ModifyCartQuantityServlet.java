@@ -21,7 +21,7 @@ public class ModifyCartQuantityServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String user = request.getSession().getAttribute("name").toString();
+        String user = (String) request.getSession().getAttribute("name");
         String sku = request.getParameter("sku");
         String action = request.getParameter("action");
 

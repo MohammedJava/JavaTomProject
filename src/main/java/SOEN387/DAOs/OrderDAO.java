@@ -61,34 +61,28 @@ public class OrderDAO {
         return orderItems;
     }
 
-    public void createOrder(Order order) {
+    public int createOrder(Order order) {
         String insertOrderQuery = "INSERT INTO orders (user_id, total_price, status, shipping_address) VALUES (?, ?, ?, ?)";
         String insertItemQuery = "INSERT INTO order_items (order_id, product_sku, quantity, price) VALUES (?, ?, ?, ?)";
 
-
         Connection conn = null;
+        int orderId = -1; // Default order ID
 
         try {
             conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false); // Start transaction
 
-            // Insert the order
+            // Insert the order and get generated order ID
             try (PreparedStatement orderStmt = conn.prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS)) {
                 orderStmt.setInt(1, order.getUserId());
                 orderStmt.setDouble(2, order.getTotalPrice());
                 orderStmt.setString(3, order.getStatus());
                 orderStmt.setString(4, order.getShippingAddress());
-                int affectedRows = orderStmt.executeUpdate();
-
-                if (affectedRows == 0) {
-                    throw new SQLException("Creating order failed, no rows affected.");
-                }
+                orderStmt.executeUpdate();
 
                 try (ResultSet generatedKeys = orderStmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        order.setId(generatedKeys.getInt(1));
-                    } else {
-                        throw new SQLException("Creating order failed, no ID obtained.");
+                        orderId = generatedKeys.getInt(1); // Retrieve the generated order ID
                     }
                 }
             }
@@ -96,7 +90,7 @@ public class OrderDAO {
             // Insert the order items
             try (PreparedStatement itemStmt = conn.prepareStatement(insertItemQuery)) {
                 for (OrderItem item : order.getOrderItems()) {
-                    itemStmt.setInt(1, order.getId());
+                    itemStmt.setInt(1, orderId);
                     itemStmt.setString(2, item.getProductSku());
                     itemStmt.setInt(3, item.getQuantity());
                     itemStmt.setDouble(4, item.getPrice());
@@ -106,20 +100,17 @@ public class OrderDAO {
             }
 
             conn.commit(); // Commit transaction
-            System.out.println("Order created successfully.");
         } catch (SQLException e) {
             System.out.println("Error creating order: " + e.getMessage());
             if (conn != null) {
                 try {
                     conn.rollback(); // Rollback transaction on error
-                    System.out.println("Transaction rolled back due to error.");
                 } catch (SQLException ex) {
                     System.out.println("Error rolling back transaction: " + ex.getMessage());
                 }
             }
             throw new RuntimeException(e);
         } finally {
-            // Close the connection in the finally block
             if (conn != null) {
                 try {
                     conn.close();
@@ -128,7 +119,10 @@ public class OrderDAO {
                 }
             }
         }
+
+        return orderId; // Return the created order ID
     }
+
 
 
     public void updateOrder(Order order) {
@@ -248,6 +242,19 @@ public class OrderDAO {
             if (affectedRows == 0) {
                 throw new SQLException("Shipping order failed, no rows affected.");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setOrderOwner(int orderId, int userId) {
+        String query = "UPDATE orders SET user_id = ? WHERE id = ? AND user_id = 0"; //special id 0 for anonymous users
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, orderId);
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

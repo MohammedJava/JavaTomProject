@@ -21,10 +21,10 @@ public class OrderService {
         return orderDAO.getOrderById(orderId);
     }
 
-    public void createOrder(Order order, List<OrderItem> items) {
-        order.setOrderItems(items); // Make sure the items are set
+    public int createOrder(Order order, List<OrderItem> items) {
+        order.setOrderItems(items);
         System.out.println("Creating order for user ID: " + order.getUserId());
-        orderDAO.createOrder(order);
+        return orderDAO.createOrder(order);
     }
     public void updateOrder(Order order) {
         orderDAO.updateOrder(order);
@@ -42,4 +42,19 @@ public class OrderService {
         return orderDAO.getOrdersByUserId(userId);
     }
 
+    public void setOrderOwner(int orderId, int userId) {
+        Order order = getOrderById(orderId);
+        if (order != null) {
+            if (order.getUserId() == -1) {
+                order.setUserId(userId);
+                updateOrder(order);
+            } else {
+                // Handle the case where the order is already claimed
+                throw new IllegalArgumentException("Order is already claimed");
+            }
+        } else {
+            // Handle the case where the order doesn't exist
+            throw new IllegalArgumentException("Order not found");
+        }
+    }
 }

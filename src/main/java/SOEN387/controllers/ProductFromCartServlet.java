@@ -1,5 +1,6 @@
 package SOEN387.controllers;
 
+import SOEN387.services.UserService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,46 +20,29 @@ public class ProductFromCartServlet extends HttpServlet {
 	
 	private ProductService productService;
 	private CartService cartService;
+	private UserService userService;
 	
 	public ProductFromCartServlet() {
 		productService = new ProductService();
 		cartService = new CartService();
 	}
-	 
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-	            throws ServletException, IOException {
-		  
+			throws ServletException, IOException {
+
 		HttpSession session = request.getSession(false); // Get the session without creating a new one (use 'false')
-        String name = "";
-		try {
-		    if (session == null) {
-		        throw new IllegalStateException("No session found");
-		    }
-		    name = (String) session.getAttribute("name");
-		    if (name == null) {
-		        throw new IllegalArgumentException("No user name found");
-		    }
+		String username = (session != null) ? (String) session.getAttribute("name") : null;
 
-		    response.getWriter().write("Welcome, " + name);
-		} catch (IllegalStateException e) {
-		    // Handle the case where no session is found
-		    response.getWriter().write("Error: " + e.getMessage());
-		} catch (IllegalArgumentException e) {
-		    // Handle the case where no user name is found
-		    response.getWriter().write("Error: " + e.getMessage());
-		}
- 
-		 
-		 String PathInfo = request.getPathInfo();
-		 String urlSlug = PathInfo.substring(1);
-		 String SKU = (productService.getProductByUrlSlug(urlSlug)).getSku();
-		 cartService.addProductToCart(name, SKU);
+		String pathInfo = request.getPathInfo();
+		String urlSlug = pathInfo.substring(1);
+		String sku = productService.getProductByUrlSlug(urlSlug).getSku();
 
-		 RequestDispatcher dispatcher = request.getRequestDispatcher("/userCart.jsp");
-		 dispatcher.forward(request, response);
-		 
-		 
- }
+		System.out.println("Adding product to cart. User: " + username + ", SKU: " + sku);
+
+		cartService.addProductToCart(username, sku);
+
+		response.sendRedirect("/JavaTomProject_war_exploded/cart/products");
+	}
 
 	@Override
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)

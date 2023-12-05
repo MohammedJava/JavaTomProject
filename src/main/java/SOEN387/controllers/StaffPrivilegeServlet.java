@@ -59,48 +59,50 @@ public class StaffPrivilegeServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		String role = request.getParameter("userRole");
 		String customerPasscode = request.getParameter("passcode");
-		HttpSession session = request.getSession(false); 
-		
-		if(role.equals(null) || role.equals("")) {
-			
+
+		if (role == null || role.isEmpty()) {
+			// Handle case where role is not provided
+			request.setAttribute("errorMessage", "Role is required.");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("grantStaff.jsp");
+			dispatcher.forward(request, response);
+			return;
 		}
-		
-	    String passcode = "";
-	     try {
-			    if (session == null) {
-			        throw new IllegalStateException("No session found");
-			    }
-			    passcode = (String) session.getAttribute("passcode");
-			    if (passcode == null) {
-			        throw new IllegalArgumentException("No user name found");
-			    }
-		
-			} catch (IllegalStateException e) {
-			    // Handle the case where no session is found
-			    response.getWriter().write("Error: " + e.getMessage());
-			} catch (IllegalArgumentException e) {
-			    // Handle the case where no user name is found
-			    response.getWriter().write("Error: " + e.getMessage());
+
+		HttpSession session = request.getSession(false);
+		String passcode = "";
+		try {
+			if (session == null) {
+				throw new IllegalStateException("No session found");
+			}
+			passcode = (String) session.getAttribute("passcode");
+			if (passcode == null) {
+				throw new IllegalArgumentException("No user passcode found");
+			}
+		} catch (IllegalStateException | IllegalArgumentException e) {
+			response.getWriter().write("Error: " + e.getMessage());
+			return;
 		}
-	    
-		customers = userService.getAllUsersExceptSelf(passcode);
-		
-        User user = userService.findByPasscode(customerPasscode);
+
+		User user = userService.findByPasscode(customerPasscode);
 		boolean PrivilegeCondition = userService.GrantStaffPrivilege(user, role);
-		if(PrivilegeCondition) {
-			
+		if (PrivilegeCondition) {
+			if (session != null && customerPasscode.equals(session.getAttribute("passcode"))) {
+				session.setAttribute("role", role.equals("admin") ? "staff" : "customer");
+			}
+			request.setAttribute("successMessage", "User role updated successfully.");
 		} else {
-			
+			request.setAttribute("errorMessage", "Failed to update user role.");
 		}
+
+		customers = userService.getAllUsersExceptSelf(passcode);
 		request.setAttribute("customers", customers);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("grantStaff.jsp");
-        dispatcher.forward(request, response);	
-		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("grantStaff.jsp");
+		dispatcher.forward(request, response);
 	}
 
 }

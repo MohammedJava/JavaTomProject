@@ -33,13 +33,9 @@ public class OrdersServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("name") == null) {
-            response.sendRedirect("login");
-            return;
-        }
 
-        String username = (String) session.getAttribute("name");
-
+        String username = session != null ? (String) session.getAttribute("name") : null;
+        int userId = 0; // Default user ID for anonymous orders
 
 
         List<CartItem> cartProducts = cartService.getCart(username);
@@ -60,15 +56,17 @@ public class OrdersServlet extends HttpServlet {
 
         Order order = new Order(0, getUserId(username), new Timestamp(System.currentTimeMillis()),
                 totalPrice, "Pending", shippingAddress);
+
         if (cartProducts != null && !cartProducts.isEmpty()) {
             order.setOrderItems(orderItems);
 
-            orderService.createOrder(order, orderItems);
+            int orderId = orderService.createOrder(order, orderItems);
 
             cartService.clearCart(username);
             System.out.println("Cart cleared for user: " + username);
 
             request.setAttribute("order", order);
+            request.setAttribute("orderId", orderId); // Pass orderId to the view
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
             response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
             response.setDateHeader("Expires", 0); // Proxies.

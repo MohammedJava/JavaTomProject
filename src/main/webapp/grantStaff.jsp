@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.List" %>
-<%@ page import="com.SOEN387.models.User" %>
+<%@ page import="SOEN387.models.User" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,7 +56,13 @@
            <% } %>
         </div>
     <% } %>
-    
+
+        <% if (request.getAttribute("successMessage") != null) { %>
+        <p class="success"><%= request.getAttribute("successMessage") %></p>
+        <% } %>
+        <% if (request.getAttribute("errorMessage") != null) { %>
+        <p class="error"><%= request.getAttribute("errorMessage") %></p>
+        <% } %>
     </div>
     
         

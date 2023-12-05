@@ -21,13 +21,13 @@ public class UpdateCartQuantityServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String user = request.getSession().getAttribute("name").toString();
+        String user = (String) request.getSession().getAttribute("name");
         String sku = request.getParameter("sku");
         int quantity = Integer.parseInt(request.getParameter("quantity"));
 
         cartService.SetProductQuantityInCart(user, sku, quantity);
 
-        // Redirect back to the cart page or display a confirmation message
-        response.sendRedirect("/userCart.jsp"); // Update with the correct redirect URL
+        response.sendRedirect("/JavaTomProject_war_exploded/cart/products");
     }
 }
+

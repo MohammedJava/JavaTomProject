@@ -22,10 +22,7 @@ public class CartService {
 
 
     public List<CartItem> getCart(String user) {
-        int userId = userDAO.getUserIDByPasscode(user);
-        if (userId == -1) {
-            return null;
-        }
+        int userId = (user != null) ? userDAO.getUserIDByPasscode(user) : -1; // Use -1 for anonymous users
         return cartDAO.getCartItems(userId);
     }
 
@@ -36,10 +33,10 @@ public class CartService {
            user, create one first.
 		 * */
 
-        int userId = userDAO.getUserIDByPasscode(user);
+        int userId = (user != null) ? userDAO.getUserIDByPasscode(user) : -1; // Use -1 for anonymous users
         Product product = productDAO.getProduct(sku);
         int productId = productDAO.getProductIDByName(product.getName());
-        if (product != null && userId >= 0 && productId >= 0) {
+        if (product != null && productId >= 0) {
             cartDAO.UpdateQuantity(userId, productId, Quantity);
         }
 
@@ -48,34 +45,30 @@ public class CartService {
 
     public void addProductToCart(String user, String sku) {
 
-        int userId = userDAO.getUserIDByPasscode(user);
+        int userId = (user != null) ? userDAO.getUserIDByPasscode(user) : -1; // Use -1 for anonymous users
         Product product = productDAO.getProduct(sku);
         int productId = productDAO.getProductIDByName(product.getName());
 
-        if (product != null && userId >= 0 && productId >= 0) {
+        if (product != null && productId >= 0) {
             cartDAO.addToCart(userId, productId);
         }
     }
 
     public void removeProductFromCart(String user, String sku) {
 
-        int userId = userDAO.getUserIDByPasscode(user);
+        int userId = (user != null) ? userDAO.getUserIDByPasscode(user) : -1; // Use -1 for anonymous users
         Product product = productDAO.getProduct(sku);
         int productId = productDAO.getProductIDByName(product.getName());
 
-        if (product != null && userId >= 0 && productId >= 0) {
+        if (product != null && productId >= 0) {
             cartDAO.removeFromCart(userId, productId);
         }
     }
 
     public void clearCart(String username) {
         int userId = userDAO.getUserIDByPasscode(username);
-        if (userId >= 0) {
             System.out.println("Clearing cart for user ID: " + userId);
             cartDAO.clearCartItems(userId);
-        } else {
-            System.out.println("Failed to clear cart, user ID not found for username: " + username);
-        }
     }
 
     public void removeSingleItemFromCart(String user, String sku) {
@@ -89,10 +82,7 @@ public class CartService {
     }
 
     public int getProductQuantityInCart(String user, String sku) {
-        int userId = userDAO.getUserIDByPasscode(user);
-        if (userId == -1) {
-            return 0;
-        }
+        int userId = (user != null) ? userDAO.getUserIDByPasscode(user) : -1; // Use -1 for anonymous users
 
         List<CartItem> cartItems = cartDAO.getCartItems(userId);
         if (cartItems == null) {

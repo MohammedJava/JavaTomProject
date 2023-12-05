@@ -22,38 +22,20 @@ public class ProductsCartServlet extends HttpServlet {
 	public ProductsCartServlet() {
 		cartService = new CartService();
 	}
-		 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-		            throws ServletException, IOException {
-		
-		
-		
-		HttpSession session = request.getSession(false); // Get the session without creating a new one (use 'false')
-        String name = "";
-		try {
-		    if (session == null) {
-		        throw new IllegalStateException("No session found");
-		    }
-		    name = (String) session.getAttribute("name");
-		    if (name == null) {
-		        throw new IllegalArgumentException("No user name found");
-		    }
-	
-		} catch (IllegalStateException e) {
-		    // Handle the case where no session is found
-		    response.getWriter().write("Error: " + e.getMessage());
-		} catch (IllegalArgumentException e) {
-		    // Handle the case where no user name is found
-		    response.getWriter().write("Error: " + e.getMessage());
-		} 
-		 
-		 List<CartItem> userProducts = cartService.getCart(name);
-		 request.setAttribute("cartItems", userProducts);
-		 request.setAttribute("name", name);
 
-		 RequestDispatcher dispatcher = request.getRequestDispatcher("/userCart.jsp");
-		 dispatcher.forward(request, response);
-	} 
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		HttpSession session = request.getSession(true);
+		String name = (String) session.getAttribute("name");
+
+		List<CartItem> userProducts = cartService.getCart(name);
+		request.setAttribute("cartItems", userProducts);
+		request.setAttribute("name", name);
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/userCart.jsp");
+		dispatcher.forward(request, response);
+	}
 	
 }
 

@@ -52,16 +52,24 @@ public class UserService {
         }
         return false; 
 }
-    
-    
+
+
     public boolean GrantStaffPrivilege(User user, String role) {
-    	if (role.equals("admin")) {
-    		return userDAO.GrantStaffPrivilege(user.getId(), true);
-    	}
-    	else if (role.equals("customer")) {
-    		return userDAO.GrantStaffPrivilege(user.getId(), false);
-    	}
-    	return false;
+        boolean isStaff = "admin".equals(role);
+        if ("admin".equals(role) || "customer".equals(role)) {
+            boolean updateStatus = userDAO.GrantStaffPrivilege(user.getId(), isStaff);
+            if (updateStatus) {
+                // Log successful update
+                System.out.println("User role updated to: " + role);
+            } else {
+                // Log failure
+                System.out.println("Failed to update user role to: " + role);
+            }
+            return updateStatus;
+        }
+        // Log invalid role
+        System.out.println("Invalid role specified: " + role);
+        return false;
     }
     
     public List<User> getAllCustomers(){
